@@ -1,7 +1,7 @@
 package main
 
 import (
-	"client"
+	"terraform-provider-appcheckng/client"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
