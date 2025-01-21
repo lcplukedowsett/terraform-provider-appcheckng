@@ -16,11 +16,14 @@ func main() {
 	}
 
 	appCheckClient := client.NewAppCheckClient(apiKey, endpoint)
-	token, err := appCheckClient.Authenticate()
-	if err != nil {
-		fmt.Println("Error authenticating:", err)
-		return
-	}
+	fmt.Println("AppCheck client created:", appCheckClient)
+	// Remove the Authenticate method call
+	// token, err := appCheckClient.Authenticate()
+	// if err != nil {
+	// 	fmt.Println("Error authenticating:", err)
+	// 	return
+	// }
 
-	fmt.Println("Authentication token:", token)
+	// fmt.Println("Authentication token:", token)
+	fmt.Println("Client initialized successfully")
 }
