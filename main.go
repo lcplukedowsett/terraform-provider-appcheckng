@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"terraform-provider-appcheckng/terraform-provider-appcheckng/client"
 )
 
 func main() {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"terraform-provider-appcheckng/client"
 
@@ -67,7 +68,7 @@ func resourceAppCheckScanDefinitionCreate(d *schema.ResourceData, m interface{})
 		data.Set("tags", tags)
 	}
 
-	resp, err := client.postRequest("scan/new", data.Encode())
+	resp, err := client.CreateScan(data.Encode())
 	if err != nil {
 		return err
 	}
@@ -86,7 +87,29 @@ func resourceAppCheckScanDefinitionCreate(d *schema.ResourceData, m interface{})
 }
 
 func resourceAppCheckScanDefinitionRead(d *schema.ResourceData, m interface{}) error {
-	// Implement the read function
+	client := m.(*client.Client)
+
+	scanID := d.Id()
+	resp, err := client.GetScanDetails(scanID)
+	if err != nil {
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+			return nil
+		}
+		return err
+	}
+
+	var result map[string]interface{}
+	if err := json.Unmarshal(resp, &result); err != nil {
+		return err
+	}
+
+	d.Set("name", result["name"])
+	d.Set("targets", result["targets"])
+	d.Set("profile_id", result["profile_id"])
+	d.Set("scan_hub", result["scan_hub"])
+	d.Set("tags", result["tags"])
+
 	return nil
 }
 
@@ -117,7 +140,7 @@ func resourceAppCheckScanDefinitionUpdate(d *schema.ResourceData, m interface{})
 		data.Set("tags", tags)
 	}
 
-	resp, err := client.postRequest(fmt.Sprintf("scan/%s/update", scanID), data.Encode())
+	resp, err := client.UpdateScan(scanID, data.Encode())
 	if err != nil {
 		return err
 	}
@@ -138,7 +161,7 @@ func resourceAppCheckScanDefinitionDelete(d *schema.ResourceData, m interface{})
 	client := m.(*client.Client)
 
 	scanID := d.Id()
-	_, err := client.postRequest(fmt.Sprintf("scan/%s/delete", scanID), "")
+	_, err := client.DeleteScan(scanID)
 	if err != nil {
 		return err
 	}

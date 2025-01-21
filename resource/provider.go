@@ -25,6 +25,9 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"appcheck_scan_definition": resourceAppCheckScanDefinition(),
 		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"appcheck_scan_definition": dataSourceAppCheckScanDefinition(),
+		},
 		ConfigureFunc: providerConfigure,
 	}
 }
